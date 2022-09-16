@@ -1,0 +1,12 @@
+@use "./colors" as *;
+
+@mixin button($borderColor, $boxShadowColor, $fontColor) {
+  background: none;
+  color: $fontColor;
+  padding: 5px 15px;
+  border: 1px solid $borderColor;
+  border-radius: 20px;
+  box-shadow: 0 0 10px $boxShadowColor;
+  transition: 0.3s;
+  cursor: pointer;
+}

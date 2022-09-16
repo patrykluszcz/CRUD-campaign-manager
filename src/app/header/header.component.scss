@@ -1,0 +1,22 @@
+@use "../../styles/colors" as *;
+@import url("https://fonts.googleapis.com/css2?family=Nabla&display=swap");
+
+.header {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 8vh;
+  padding: 40px;
+}
+
+.header_icon {
+  padding-right: 20px;
+  font-size: 40px;
+  color: $orange;
+}
+
+.header_title {
+  text-transform: uppercase;
+  font-size: 40px;
+  font-family: "Nabla", cursive;
+}

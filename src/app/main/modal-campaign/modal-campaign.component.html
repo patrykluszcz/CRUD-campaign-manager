@@ -1,0 +1,98 @@
+<div class="d-flex modal-header justify-content-center">
+  <h1 class="text-uppercase">{{ modalTitle }}</h1>
+</div>
+<div class="d-flex modal-body">
+  <form [formGroup]="formValue" class="d-flex justify-content-between p-20">
+    <div class="p-20 set">
+      <div class="mb-3">
+        <label for="Campaign Name">Campaign Name</label>
+        <div class="input-group">
+          <input
+            class="form-control"
+            placeholder="Enter your campaign name"
+            formControlName="campaignName"
+          />
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="Keyword">Keyword</label>
+        <div class="input-group">
+          <input
+            class="form-control"
+            placeholder="Enter keyword"
+            formControlName="keyword"
+          />
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="Bid Amount">Bid Amount</label>
+        <div class="input-group">
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Enter your bid amount"
+            formControlName="bidAmount"
+          />
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="Campaign Fund">Campaign Fund</label>
+        <div class="input-group">
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Enter your campaign fund"
+            formControlName="campaignFund"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="set">
+      <div class="mb-3">
+        <label for="Town">Town</label>
+        <select
+          class="form-select"
+          aria-label="Default select example"
+          formControlName="town"
+        >
+          <option disabled selected>-- Choose your town --</option>
+          <option *ngFor="let town of towns">{{ town }}</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="Product Name">Product Name</label>
+        <div class="input-group">
+          <input
+            class="form-control"
+            placeholder="Enter your product name"
+            formControlName="productName"
+          />
+        </div>
+      </div>
+      <div class="mb-3 d-flex justify-content-between">
+        <label for="Status">Status OFF/ON</label>
+        <mat-slide-toggle></mat-slide-toggle>
+      </div>
+      <div class="mb-3 d-flex flex-column align-items-center">
+        <label for="Radius Campaign">Radius Campaign</label>
+        <mat-slider
+          thumbLabel
+          [displayWith]="formatLabel"
+          tickInterval="1"
+          step="1"
+          min="0"
+          max="100"
+          aria-label="units"
+        ></mat-slider>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="d-flex modal-footer justify-content-center">
+  <button type="button" class="btn btn-dark" (click)="postCampaign()">
+    Save
+  </button>
+  <button type="button" class="btn btn-danger" (click)="closeModal()">
+    Cancel
+  </button>
+</div>
