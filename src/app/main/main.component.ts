@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { campaignModel } from '../models/campaignModel';
+import { ApiService } from '../shared/api.service';
 import { ModalCampaignComponent } from './modal-campaign/modal-campaign.component';
 
 @Component({
@@ -9,36 +10,27 @@ import { ModalCampaignComponent } from './modal-campaign/modal-campaign.componen
   styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements OnInit {
-  campaignModelObj: campaignModel = new campaignModel();
+  constructor(public modalService: NgbModal, private apiService: ApiService) {}
 
-  constructor(public modalService: NgbModal) {}
-
-  @Input() campaigns = [
-    {
-      id: 1,
-      campaignName: 'Strategy & Future',
-      keyword: 'S&F',
-      bidAmount: 20000,
-      campaignFund: 1000000,
-      status: 'OFF',
-      town: 'Kraków',
-      radius: 25,
-      productName: 'Armia Nowego Wzoru',
-    },
-  ];
+  campaigns: campaignModel[] = [];
 
   openModal() {
-    const modalRef = this.modalService.open(ModalCampaignComponent, {
+    this.modalService.open(ModalCampaignComponent, {
       centered: true,
     });
-    modalRef.result
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.apiService.getCampaign().subscribe((res) => {
+      this.campaigns = res;
+    });
+  }
+
+  deleteCampaign(campaignData: any) {
+    this.apiService.deleteCampaign(campaignData.id).subscribe((res) => {
+      console.log(res);
+      console.log(campaignData);
+      alert('deleted campaign');
+    });
+  }
 }

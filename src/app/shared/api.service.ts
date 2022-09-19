@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +16,7 @@ export class ApiService {
     );
   }
 
-  getCampaign() {
+  getCampaign(): Observable<any> {
     return this.http.get<any>('http://localhost:3004/posts').pipe(
       map((res: any) => {
         return res;

@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Town } from '../../models/enums/townSelect.enum';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../../shared/api.service';
 import { campaignModel } from 'src/app/models/campaignModel';
 
@@ -10,12 +10,21 @@ import { campaignModel } from 'src/app/models/campaignModel';
   templateUrl: './modal-campaign.component.html',
 })
 export class ModalCampaignComponent implements OnInit {
-  @ViewChild('content')
-  content!: string;
   towns: Array<string> = Object.keys(Town);
+  formValues!: FormGroup;
   modalTitle = 'Add Campaign';
-  formValue!: FormGroup;
-  campaignModelObj!: campaignModel;
+
+  campaignModelObj: campaignModel = {
+    id: 0,
+    campaignName: '',
+    keyword: '',
+    bidAmount: 0,
+    campaignFund: 0,
+    status: '',
+    productName: '',
+    town: '',
+    radius: 0,
+  };
 
   constructor(
     private formBuilder: FormBuilder,
@@ -24,20 +33,31 @@ export class ModalCampaignComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.formValue = this.formBuilder.group({
-      campaignName: [''],
-      keyword: [''],
+    this.initForm();
+    this.getAllCampaignData();
+    console.log(this.campaignModelObj);
+  }
+
+  initForm(): void {
+    this.formValues = this.formBuilder.group({
+      campaignName: [null, [Validators.required]],
+      keyword: [null, [Validators.required]],
       bidAmount: [''],
       campaignFund: [''],
       status: [''],
+      productName: [null, [Validators.required]],
       town: [''],
       radius: [''],
-      productName: [''],
     });
+  }
+
+  get form() {
+    return this.formValues.controls;
   }
 
   closeModal() {
     this.activeModal.close('Modal Closed');
+    this.formValues.reset();
   }
 
   formatLabel(value: number) {
@@ -56,9 +76,9 @@ export class ModalCampaignComponent implements OnInit {
       bidAmount: 20000,
       campaignFund: 1000000,
       status: 'OFF',
+      productName: 'Armia Nowego Wzoru',
       town: 'Kraków',
       radius: 25,
-      productName: 'Armia Nowego Wzoru',
     },
   ];
 
@@ -69,20 +89,66 @@ export class ModalCampaignComponent implements OnInit {
   }
 
   postCampaign() {
-    this.campaignModelObj.id = this.formValue.value.id;
-    this.campaignModelObj.campaignName = this.formValue.value.campaignName;
-    this.campaignModelObj.keyword = this.formValue.value.keyword;
-    this.campaignModelObj.bidAmount = this.formValue.value.bidAmount;
-    this.campaignModelObj.campaignFund = this.formValue.value.campaignFund;
-    // this.campaignModelObj.status = this.isChecked ? 'ON' : 'OFF';
-    this.campaignModelObj.town = this.formValue.value.town;
-    // this.campaignModelObj.radius = this.valueFromSlider;
-    this.campaignModelObj.productName = this.formValue.value.productName;
-
+    if (this.campaignModelObj) {
+      this.campaignModelObj.id = this.formValues.value.id;
+      this.campaignModelObj.campaignName = this.formValues.value.campaignName;
+      this.campaignModelObj.keyword = this.formValues.value.keyword;
+      this.campaignModelObj.bidAmount = this.formValues.value.bidAmount;
+      this.campaignModelObj.campaignFund = this.formValues.value.campaignFund;
+      // this.campaignModelObj.status = this.isChecked ? 'ON' : 'OFF';
+      this.campaignModelObj.productName = this.formValues.value.productName;
+      this.campaignModelObj.town = this.formValues.value.town;
+      // this.campaignModelObj.radius = this.valueFromSlider;
+    }
     this.apiService.postCampaign(this.campaignModelObj).subscribe((res) => {
       console.log(res);
       alert('successfully');
-      this.formValue.reset();
+      this.formValues.reset();
+      this.getAllCampaignData();
+    });
+  }
+
+  onSubmit() {
+    this.postCampaign();
+    this.closeModal();
+  }
+
+  editCampaign(campaignData: any) {
+    this.campaignModelObj.id = campaignData.id;
+    this.formValues.controls['campaignName'].setValue(
+      campaignData.campaignName
+    );
+    this.formValues.controls['keyword'].setValue(campaignData.keyword);
+    this.formValues.controls['bidAmount'].setValue(campaignData.bidAmount);
+    this.formValues.controls['campaignFund'].setValue(
+      campaignData.campaignFund
+    );
+    this.formValues.controls['status'].setValue(campaignData.status);
+    this.formValues.controls['radius'].setValue(campaignData.radius);
+    this.formValues.controls['productName'].setValue(campaignData.productName);
+  }
+
+  // updateCampaign() {
+  //   this.campaignModelObj.campaignName = this.formValues.value.campaignName;
+  //   this.campaignModelObj.keyword = this.formValues.value.keyword;
+  //   this.campaignModelObj.bidAmount = this.formValues.value.bidAmount;
+  //   this.campaignModelObj.campaignFund = this.formValues.value.campaignFund;
+  //   this.campaignModelObj.town = this.formValues.value.town;
+  //   this.campaignModelObj.productName = this.formValues.value.productName;
+
+  //   this.apiService
+  //     .updateCampaign(this.campaignModelObj: Number, this.campaignModelObj.id)
+  //     .subscribe((res) => {
+  //       alert('update successufully');
+  //       this.formValues.reset();
+  //       this.closeModal();
+  //       this.getAllCampaignData();
+  //     });
+  // }
+
+  deleteCampaign(campaignData: any) {
+    this.apiService.deleteCampaign(campaignData.id).subscribe((res) => {
+      alert('deleted campaign');
       this.getAllCampaignData();
     });
   }

@@ -34,8 +34,13 @@
           <td>{{ campaignProperty.town }}</td>
           <td>{{ campaignProperty.radius }}</td>
           <td>
-            <button class="table_td_editBtn">Edit</button>
-            <button class="table_td_deleteBtn">Delete</button>
+            <button class="table_td_editBtn" (click)="openModal()">Edit</button>
+            <button
+              class="table_td_deleteBtn"
+              (click)="deleteCampaign(campaignProperty)"
+            >
+              Delete
+            </button>
           </td>
         </tr>
       </tbody>
