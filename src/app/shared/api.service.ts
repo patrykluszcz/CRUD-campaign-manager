@@ -23,7 +23,7 @@ export class ApiService {
       })
     );
   }
-  updateCampaign(id: number, data: any) {
+  updateCampaign(data: any, id: number) {
     return this.http.put<any>('http://localhost:3004/posts/' + id, data).pipe(
       map((res: any) => {
         return res;
@@ -33,6 +33,14 @@ export class ApiService {
 
   deleteCampaign(id: number) {
     return this.http.delete<any>('http://localhost:3004/posts/' + id).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  deleteCampaigns() {
+    return this.http.delete<any>('http://localhost:3004/posts').pipe(
       map((res: any) => {
         return res;
       })

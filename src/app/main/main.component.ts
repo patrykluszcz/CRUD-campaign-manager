@@ -25,11 +25,20 @@ export class MainComponent implements OnInit {
       this.campaigns = res;
     });
   }
+  deleteAllCampaigns() {
+    this.apiService.deleteCampaigns().subscribe((res) => {
+      console.log(res);
+
+      window.location.reload();
+      alert('deleted campaign');
+    });
+  }
 
   deleteCampaign(campaignData: any) {
     this.apiService.deleteCampaign(campaignData.id).subscribe((res) => {
       console.log(res);
       console.log(campaignData);
+      window.location.reload();
       alert('deleted campaign');
     });
   }

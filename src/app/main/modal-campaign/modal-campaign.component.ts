@@ -111,6 +111,7 @@ export class ModalCampaignComponent implements OnInit {
   onSubmit() {
     this.postCampaign();
     this.closeModal();
+    window.location.reload();
   }
 
   editCampaign(campaignData: any) {
@@ -128,23 +129,23 @@ export class ModalCampaignComponent implements OnInit {
     this.formValues.controls['productName'].setValue(campaignData.productName);
   }
 
-  // updateCampaign() {
-  //   this.campaignModelObj.campaignName = this.formValues.value.campaignName;
-  //   this.campaignModelObj.keyword = this.formValues.value.keyword;
-  //   this.campaignModelObj.bidAmount = this.formValues.value.bidAmount;
-  //   this.campaignModelObj.campaignFund = this.formValues.value.campaignFund;
-  //   this.campaignModelObj.town = this.formValues.value.town;
-  //   this.campaignModelObj.productName = this.formValues.value.productName;
+  updateCampaign() {
+    this.campaignModelObj.campaignName = this.formValues.value.campaignName;
+    this.campaignModelObj.keyword = this.formValues.value.keyword;
+    this.campaignModelObj.bidAmount = this.formValues.value.bidAmount;
+    this.campaignModelObj.campaignFund = this.formValues.value.campaignFund;
+    this.campaignModelObj.town = this.formValues.value.town;
+    this.campaignModelObj.productName = this.formValues.value.productName;
 
-  //   this.apiService
-  //     .updateCampaign(this.campaignModelObj: Number, this.campaignModelObj.id)
-  //     .subscribe((res) => {
-  //       alert('update successufully');
-  //       this.formValues.reset();
-  //       this.closeModal();
-  //       this.getAllCampaignData();
-  //     });
-  // }
+    this.apiService
+      .updateCampaign(this.campaignModelObj, this.campaignModelObj.id)
+      .subscribe((res) => {
+        alert('update successufully');
+        this.formValues.reset();
+        this.closeModal();
+        this.getAllCampaignData();
+      });
+  }
 
   deleteCampaign(campaignData: any) {
     this.apiService.deleteCampaign(campaignData.id).subscribe((res) => {
