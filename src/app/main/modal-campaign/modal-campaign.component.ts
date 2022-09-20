@@ -11,7 +11,9 @@ import { campaignModel } from 'src/app/models/campaignModel';
 })
 export class ModalCampaignComponent implements OnInit {
   towns: Array<string> = Object.keys(Town);
+
   formValues!: FormGroup;
+
   modalTitle = 'Add Campaign';
 
   campaignModelObj: campaignModel = {
