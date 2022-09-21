@@ -1,5 +1,17 @@
 {
-  "posts": [],
+  "posts": [
+    {
+      "campaignName": "fdsfds",
+      "keyword": "fdsfds",
+      "bidAmount": 324,
+      "campaignFund": 234,
+      "status": "ON",
+      "productName": "42332r",
+      "town": "Rzeszów",
+      "radius": 26,
+      "id": 1
+    }
+  ],
   "comments": [],
   "profile": {
     "name": "typicode"

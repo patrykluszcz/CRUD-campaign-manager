@@ -4,6 +4,7 @@ import { Town } from '../../models/enums/townSelect.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../../shared/api.service';
 import { campaignModel } from 'src/app/models/campaignModel';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-modal-campaign',
@@ -15,6 +16,10 @@ export class ModalCampaignComponent implements OnInit {
   formValues!: FormGroup;
 
   modalTitle = 'Add Campaign';
+
+  valueFromSlider!: number;
+
+  isChecked = false;
 
   campaignModelObj: campaignModel = {
     id: 0,
@@ -70,6 +75,10 @@ export class ModalCampaignComponent implements OnInit {
     return value;
   }
 
+  statusChanged(event: MatSlideToggleChange) {
+    this.isChecked = event.checked;
+  }
+
   campaigns = [
     {
       id: 1,
@@ -97,14 +106,13 @@ export class ModalCampaignComponent implements OnInit {
       this.campaignModelObj.keyword = this.formValues.value.keyword;
       this.campaignModelObj.bidAmount = this.formValues.value.bidAmount;
       this.campaignModelObj.campaignFund = this.formValues.value.campaignFund;
-      // this.campaignModelObj.status = this.isChecked ? 'ON' : 'OFF';
+      this.campaignModelObj.status = this.isChecked ? 'ON' : 'OFF';
       this.campaignModelObj.productName = this.formValues.value.productName;
       this.campaignModelObj.town = this.formValues.value.town;
-      // this.campaignModelObj.radius = this.valueFromSlider;
+      this.campaignModelObj.radius = this.valueFromSlider;
     }
     this.apiService.postCampaign(this.campaignModelObj).subscribe((res) => {
       console.log(res);
-      alert('successfully');
       this.formValues.reset();
       this.getAllCampaignData();
     });
@@ -141,7 +149,7 @@ export class ModalCampaignComponent implements OnInit {
 
     this.apiService
       .updateCampaign(this.campaignModelObj, this.campaignModelObj.id)
-      .subscribe((res) => {
+      .subscribe(() => {
         alert('update successufully');
         this.formValues.reset();
         this.closeModal();
@@ -151,8 +159,12 @@ export class ModalCampaignComponent implements OnInit {
 
   deleteCampaign(campaignData: any) {
     this.apiService.deleteCampaign(campaignData.id).subscribe((res) => {
-      alert('deleted campaign');
       this.getAllCampaignData();
     });
+  }
+
+  getSliderValue(sliderValue: number) {
+    console.log(sliderValue);
+    this.valueFromSlider = sliderValue;
   }
 }

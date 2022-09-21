@@ -1,0 +1,12 @@
+<mat-slider
+  thumbLabel
+  [displayWith]="formatLabel"
+  tickInterval="1000"
+  step="1"
+  min="0"
+  max="100"
+  aria-label="units"
+  color="warn"
+  (change)="modelChanged()"
+  [(ngModel)]="sliderValue"
+></mat-slider>

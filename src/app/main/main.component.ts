@@ -39,7 +39,6 @@ export class MainComponent implements OnInit {
       console.log(res);
       console.log(campaignData);
       window.location.reload();
-      alert('deleted campaign');
     });
   }
 }
