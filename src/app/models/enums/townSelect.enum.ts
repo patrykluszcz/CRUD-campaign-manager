@@ -3,7 +3,7 @@ export enum Town {
   Warszawa = 'Warszawa',
   Gdańsk = 'Gdańsk',
   Rzeszów = 'Rzeszów',
-  Szecin = 'Szczecin',
+  Szczecin = 'Szczecin',
   Łódź = 'Łódź',
   Poznań = 'Poznań',
   Zakopane = 'Zakopane',

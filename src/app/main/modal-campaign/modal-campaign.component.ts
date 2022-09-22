@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../../shared/api.service';
 import { campaignModel } from 'src/app/models/campaignModel';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { validateAllFormFields } from 'src/app/shared/utils';
 
 @Component({
   selector: 'app-modal-campaign',
@@ -33,6 +34,20 @@ export class ModalCampaignComponent implements OnInit {
     radius: 0,
   };
 
+  campaigns = [
+    {
+      id: 1,
+      campaignName: 'Strategy & Future',
+      keyword: 'S&F',
+      bidAmount: 20000,
+      campaignFund: 1000000,
+      status: 'OFF',
+      productName: 'Armia Nowego Wzoru',
+      town: 'Kraków',
+      radius: 25,
+    },
+  ];
+
   constructor(
     private formBuilder: FormBuilder,
     private apiService: ApiService,
@@ -48,12 +63,12 @@ export class ModalCampaignComponent implements OnInit {
   initForm(): void {
     this.formValues = this.formBuilder.group({
       campaignName: [null, [Validators.required]],
-      keyword: [null, [Validators.required]],
-      bidAmount: [''],
-      campaignFund: [''],
-      status: [''],
+      keyword: [null, [Validators.required, Validators.maxLength(3)]],
+      bidAmount: [null, [Validators.required]],
+      campaignFund: [null, [Validators.required]],
       productName: [null, [Validators.required]],
-      town: [''],
+      town: [[null, Validators.required]],
+      status: [''],
       radius: [''],
     });
   }
@@ -79,49 +94,10 @@ export class ModalCampaignComponent implements OnInit {
     this.isChecked = event.checked;
   }
 
-  campaigns = [
-    {
-      id: 1,
-      campaignName: 'Strategy & Future',
-      keyword: 'S&F',
-      bidAmount: 20000,
-      campaignFund: 1000000,
-      status: 'OFF',
-      productName: 'Armia Nowego Wzoru',
-      town: 'Kraków',
-      radius: 25,
-    },
-  ];
-
   getAllCampaignData() {
     this.apiService.getCampaign().subscribe((res) => {
       this.campaigns = res;
     });
-  }
-
-  postCampaign() {
-    if (this.campaignModelObj) {
-      this.campaignModelObj.id = this.formValues.value.id;
-      this.campaignModelObj.campaignName = this.formValues.value.campaignName;
-      this.campaignModelObj.keyword = this.formValues.value.keyword;
-      this.campaignModelObj.bidAmount = this.formValues.value.bidAmount;
-      this.campaignModelObj.campaignFund = this.formValues.value.campaignFund;
-      this.campaignModelObj.status = this.isChecked ? 'ON' : 'OFF';
-      this.campaignModelObj.productName = this.formValues.value.productName;
-      this.campaignModelObj.town = this.formValues.value.town;
-      this.campaignModelObj.radius = this.valueFromSlider;
-    }
-    this.apiService.postCampaign(this.campaignModelObj).subscribe((res) => {
-      console.log(res);
-      this.formValues.reset();
-      this.getAllCampaignData();
-    });
-  }
-
-  onSubmit() {
-    this.postCampaign();
-    this.closeModal();
-    window.location.reload();
   }
 
   editCampaign(campaignData: any) {
@@ -134,9 +110,39 @@ export class ModalCampaignComponent implements OnInit {
     this.formValues.controls['campaignFund'].setValue(
       campaignData.campaignFund
     );
+    this.formValues.controls['productName'].setValue(campaignData.productName);
     this.formValues.controls['status'].setValue(campaignData.status);
     this.formValues.controls['radius'].setValue(campaignData.radius);
-    this.formValues.controls['productName'].setValue(campaignData.productName);
+  }
+
+  postCampaign() {
+    if (this.campaignModelObj) {
+      this.campaignModelObj.id = this.formValues.value.id;
+      this.campaignModelObj.campaignName = this.formValues.value.campaignName;
+      this.campaignModelObj.keyword = this.formValues.value.keyword;
+      this.campaignModelObj.bidAmount = this.formValues.value.bidAmount;
+      this.campaignModelObj.campaignFund = this.formValues.value.campaignFund;
+      this.campaignModelObj.productName = this.formValues.value.productName;
+      this.campaignModelObj.status = this.isChecked ? 'ON' : 'OFF';
+      this.campaignModelObj.town = this.formValues.value.town;
+      this.campaignModelObj.radius = this.valueFromSlider;
+    }
+    this.apiService.postCampaign(this.campaignModelObj).subscribe((res) => {
+      console.log(res);
+      this.formValues.reset();
+      this.getAllCampaignData();
+    });
+  }
+
+  onSubmit() {
+    validateAllFormFields(this.formValues);
+
+    if (this.formValues.invalid) return;
+
+    // this.postCampaign({ ...this.formValues.value });
+    this.postCampaign();
+
+    this.closeModal();
   }
 
   updateCampaign() {
