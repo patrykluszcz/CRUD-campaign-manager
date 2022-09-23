@@ -1,15 +1,68 @@
 {
   "posts": [
     {
-      "campaignName": "fdsfds",
-      "keyword": "fdsfds",
-      "bidAmount": 324,
-      "campaignFund": 234,
+      "campaignName": "321321",
+      "keyword": "321",
+      "bidAmount": 312321,
+      "campaignFund": 3213213,
       "status": "ON",
-      "productName": "42332r",
-      "town": "Rzeszów",
-      "radius": 26,
+      "productName": "ewqewq",
+      "town": [
+        null,
+        null
+      ],
+      "radius": 41,
       "id": 1
+    },
+    {
+      "campaignName": "ewqewq",
+      "keyword": "ewq",
+      "bidAmount": 321321,
+      "campaignFund": 321213213,
+      "status": "ON",
+      "productName": "321312321",
+      "town": "Warszawa",
+      "radius": 47,
+      "id": 2
+    },
+    {
+      "campaignName": "231321",
+      "keyword": "321",
+      "bidAmount": 312321,
+      "campaignFund": 321321,
+      "status": "ON",
+      "productName": "321231",
+      "town": [
+        null,
+        null
+      ],
+      "radius": 34,
+      "id": 3
+    },
+    {
+      "campaignName": "312321",
+      "keyword": "321",
+      "bidAmount": 21331232,
+      "campaignFund": 1321312,
+      "status": "ON",
+      "productName": "231321",
+      "town": "Łódź",
+      "radius": 62,
+      "id": 4
+    },
+    {
+      "campaignName": "321321",
+      "keyword": "321",
+      "bidAmount": 213213,
+      "campaignFund": 321,
+      "status": "ON",
+      "productName": "213321",
+      "town": [
+        null,
+        null
+      ],
+      "radius": 1,
+      "id": 5
     }
   ],
   "comments": [],

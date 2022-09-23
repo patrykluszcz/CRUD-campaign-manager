@@ -60,8 +60,10 @@
         <mat-form-field appearance="fill">
           <mat-label>Towns</mat-label>
           <select formControlName="town" matNativeControl required>
-            <option selected disabled></option>
-            <option *ngFor="let town of towns">{{ town }}</option>
+            <option selected disabled>-----</option>
+            <option *ngFor="let town of towns">
+              {{ town }}
+            </option>
           </select>
           <mat-error *ngIf="form['productName'].hasError('required')"
             >Town is required</mat-error
@@ -80,9 +82,17 @@
 
       <div class="col-md-6">
         <label class="mb-2" for="Radius Campaign">Radius Campaign (km)</label>
-        <app-formatable-slider
-          (sliderValueEvent)="getSliderValue($event)"
-        ></app-formatable-slider>
+        <mat-slider
+          thumbLabel
+          [displayWith]="formatLabel"
+          tickInterval="1000"
+          step="1"
+          min="0"
+          max="100"
+          aria-label="units"
+          color="warn"
+          (change)="modelChanged($event)"
+        ></mat-slider>
       </div>
     </div>
   </form>

@@ -6,6 +6,7 @@ import { ApiService } from '../../shared/api.service';
 import { campaignModel } from 'src/app/models/campaignModel';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { validateAllFormFields } from 'src/app/shared/utils';
+import { MatSliderModule } from '@angular/material/slider';
 
 @Component({
   selector: 'app-modal-campaign',
@@ -21,6 +22,21 @@ export class ModalCampaignComponent implements OnInit {
   valueFromSlider!: number;
 
   isChecked = false;
+
+  sliderValue = 0;
+
+  modelChanged(event: any) {
+    this.sliderValue = event.value;
+    console.log(this.sliderValue);
+  }
+
+  formatLabel(value: number) {
+    if (value >= 1000) {
+      return Math.round(value / 1000) + 'k';
+    }
+
+    return value;
+  }
 
   campaignModelObj: campaignModel = {
     id: 0,
@@ -82,20 +98,14 @@ export class ModalCampaignComponent implements OnInit {
     this.formValues.reset();
   }
 
-  formatLabel(value: number) {
-    if (value >= 1000) {
-      return Math.round(value / 1000) + 'k';
-    }
-
-    return value;
-  }
-
   statusChanged(event: MatSlideToggleChange) {
     this.isChecked = event.checked;
   }
 
   getAllCampaignData() {
     this.apiService.getCampaign().subscribe((res) => {
+      console.log(res);
+
       this.campaigns = res;
     });
   }
@@ -125,12 +135,11 @@ export class ModalCampaignComponent implements OnInit {
       this.campaignModelObj.productName = this.formValues.value.productName;
       this.campaignModelObj.status = this.isChecked ? 'ON' : 'OFF';
       this.campaignModelObj.town = this.formValues.value.town;
-      this.campaignModelObj.radius = this.valueFromSlider;
+      this.campaignModelObj.radius = this.sliderValue;
     }
     this.apiService.postCampaign(this.campaignModelObj).subscribe((res) => {
       console.log(res);
       this.formValues.reset();
-      this.getAllCampaignData();
     });
   }
 
@@ -138,8 +147,6 @@ export class ModalCampaignComponent implements OnInit {
     validateAllFormFields(this.formValues);
 
     if (this.formValues.invalid) return;
-
-    // this.postCampaign({ ...this.formValues.value });
     this.postCampaign();
 
     this.closeModal();
@@ -156,8 +163,7 @@ export class ModalCampaignComponent implements OnInit {
     this.apiService
       .updateCampaign(this.campaignModelObj, this.campaignModelObj.id)
       .subscribe(() => {
-        alert('update successufully');
-        this.formValues.reset();
+        // this.formValues.reset();
         this.closeModal();
         this.getAllCampaignData();
       });
@@ -167,10 +173,5 @@ export class ModalCampaignComponent implements OnInit {
     this.apiService.deleteCampaign(campaignData.id).subscribe((res) => {
       this.getAllCampaignData();
     });
-  }
-
-  getSliderValue(sliderValue: number) {
-    console.log(sliderValue);
-    this.valueFromSlider = sliderValue;
   }
 }

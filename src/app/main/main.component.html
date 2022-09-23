@@ -3,9 +3,7 @@
     <button class="main_buttons_addCampaign" (click)="openModal()">
       Add Campaign
     </button>
-    <button class="main_buttons_deleteAll" (click)="deleteAllCampaigns()">
-      Delete All
-    </button>
+    <button class="main_buttons_deleteAll">Delete All</button>
   </div>
 
   <div class="main_wrapper">
@@ -36,7 +34,12 @@
           <td>{{ campaignProperty.town }}</td>
           <td>{{ campaignProperty.radius }}</td>
           <td>
-            <button class="table_td_editBtn" (click)="openModal()">Edit</button>
+            <button
+              class="table_td_editBtn"
+              (click)="editCampaign(campaignProperty.id)"
+            >
+              Edit
+            </button>
             <button
               class="table_td_deleteBtn"
               (click)="deleteCampaign(campaignProperty)"
