@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { campaignModel } from '../../models/campaignModel';
 import { ApiService } from '../../shared/api.service';
@@ -10,6 +10,8 @@ import { ModalCampaignComponent } from '../modal-campaign/modal-campaign.compone
   styleUrls: ['./list-campaign.component.scss'],
 })
 export class ListCampaignComponent implements OnInit {
+  @ViewChild(ModalCampaignComponent) modal!: ModalCampaignComponent;
+
   campaignId!: number;
 
   campaigns!: campaignModel[];
@@ -17,39 +19,26 @@ export class ListCampaignComponent implements OnInit {
   constructor(public modalService: NgbModal, private apiService: ApiService) {}
 
   ngOnInit(): void {
-    this.loadCampaign();
+    this.loadCampaignData();
   }
 
-  loadCampaign() {
-    this.apiService.getCampaign().subscribe((res) => {
-      console.log(res);
+  loadCampaignData(): void {
+    this.apiService.getCampaigns().subscribe((res) => {
       this.campaigns = res;
     });
   }
 
-  deleteCampaign(campaignData: any) {
-    this.apiService.deleteCampaign(campaignData.id).subscribe((res) => {
-      console.log(res);
-      console.log(campaignData);
-      this.loadCampaign();
+  deleteCampaign(campaignData: number): void {
+    this.apiService.deleteCampaign(campaignData).subscribe(() => {
+      this.loadCampaignData();
     });
   }
 
-  updateCampaign(campaignData: any) {
-    this.apiService
-      .updateCampaign(campaignData, campaignData.id)
-      .subscribe(() => {
-        this.loadCampaign();
-      });
+  openEditModalCampaignData(projectId: number): void {
+    this.modal.openEditModal(projectId);
   }
 
-  openModalCampaign() {
-    const _modal = this.modalService.open(ModalCampaignComponent, {
-      centered: true,
-    });
-
-    _modal.closed.subscribe(() => {
-      this.loadCampaign();
-    });
+  openAddModalCampaign(): void {
+    this.modal.openModal();
   }
 }

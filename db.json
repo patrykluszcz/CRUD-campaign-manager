@@ -1,14 +1,14 @@
 {
   "posts": [
     {
-      "campaignName": "432432",
-      "keyword": "432",
-      "bidAmount": 432432,
-      "campaignFund": 342423,
+      "campaignName": "312321",
+      "keyword": "312",
+      "bidAmount": 312321,
+      "campaignFund": 321321321,
       "status": "ON",
-      "productName": "432432",
-      "town": "Warszawa",
-      "radius": 38,
+      "productName": "312321",
+      "town": "Gdańsk",
+      "radius": 33,
       "id": 1
     }
   ],

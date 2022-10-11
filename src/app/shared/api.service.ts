@@ -11,29 +11,33 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  postCampaign(data: any) {
-    return this.http.post<any>(this.apiUrl, data).pipe(
-      map((res: any) => {
+  getCampaigns(): Observable<campaignModel[]> {
+    return this.http.get<campaignModel[]>(this.apiUrl);
+  }
+
+  getCampaignById(id: number): Observable<campaignModel[]> {
+    return this.http.get<campaignModel[]>(this.apiUrl + '/' + id);
+  }
+
+  postCampaign(data: object) {
+    return this.http.post<object>(this.apiUrl, data).pipe(
+      map((res: object) => {
         return res;
       })
     );
   }
 
-  getCampaign(): Observable<campaignModel[]> {
-    return this.http.get<campaignModel[]>(this.apiUrl);
-  }
-
-  updateCampaign(data: any, id: number) {
-    return this.http.put<any>(this.apiUrl + '/' + id, data).pipe(
-      map((res: any) => {
+  updateCampaigns(data: object, id: number) {
+    return this.http.put<object>(this.apiUrl + '/' + id, data).pipe(
+      map((res: object) => {
         return res;
       })
     );
   }
 
   deleteCampaign(id: number) {
-    return this.http.delete<any>(this.apiUrl + '/' + id).pipe(
-      map((res: any) => {
+    return this.http.delete<object>(this.apiUrl + '/' + id).pipe(
+      map((res: object) => {
         return res;
       })
     );

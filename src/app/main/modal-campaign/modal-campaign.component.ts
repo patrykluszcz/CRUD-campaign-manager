@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Town } from '../../models/enums/townSelect.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../../shared/api.service';
@@ -12,7 +12,9 @@ import { validateAllFormFields } from 'src/app/shared/utils';
   templateUrl: './modal-campaign.component.html',
 })
 export class ModalCampaignComponent implements OnInit {
-  modalTitle = 'Add Campaign';
+  @ViewChild('content') content!: string;
+
+  modalTitle!: string;
 
   towns: Array<string> = Object.keys(Town);
 
@@ -20,20 +22,9 @@ export class ModalCampaignComponent implements OnInit {
 
   valueFromSlider!: number;
 
-  isChecked = false;
+  isSliderChecked = false;
 
   sliderValue = 0;
-
-  sliderChanged(event: any) {
-    this.sliderValue = event.value;
-    console.log(this.sliderValue);
-  }
-
-  formatLabel(value: number) {
-    if (value >= 1000) return Math.round(value / 1000) + 'k';
-
-    return value;
-  }
 
   campaignModelObj: campaignModel = {
     id: 0,
@@ -64,13 +55,12 @@ export class ModalCampaignComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private apiService: ApiService,
-    private activeModal: NgbActiveModal
+    public modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
     this.initForm();
     this.getAllCampaignData();
-    console.log(this.campaignModelObj);
   }
 
   initForm(): void {
@@ -90,24 +80,27 @@ export class ModalCampaignComponent implements OnInit {
     return this.formValues.controls;
   }
 
-  closeModal() {
-    this.activeModal.close('Modal Closed');
-    this.formValues.reset();
+  statusSliderChanged(event: MatSlideToggleChange): void {
+    this.isSliderChecked = event.checked;
   }
 
-  statusChanged(event: MatSlideToggleChange) {
-    this.isChecked = event.checked;
+  sliderRadiusChanged(event: any): void {
+    this.sliderValue = event.value;
   }
 
-  getAllCampaignData() {
-    this.apiService.getCampaign().subscribe((res) => {
-      console.log(res);
+  formatLabel(value: number) {
+    if (value >= 1000) return Math.round(value / 1000) + 'k';
 
+    return value;
+  }
+
+  getAllCampaignData(): void {
+    this.apiService.getCampaigns().subscribe((res) => {
       this.campaigns = res;
     });
   }
 
-  postCampaign() {
+  createCampaign(): void {
     if (this.campaignModelObj) {
       this.campaignModelObj.id = this.formValues.value.id;
       this.campaignModelObj.campaignName = this.formValues.value.campaignName;
@@ -115,16 +108,24 @@ export class ModalCampaignComponent implements OnInit {
       this.campaignModelObj.bidAmount = this.formValues.value.bidAmount;
       this.campaignModelObj.campaignFund = this.formValues.value.campaignFund;
       this.campaignModelObj.productName = this.formValues.value.productName;
-      this.campaignModelObj.status = this.isChecked ? 'ON' : 'OFF';
+      this.campaignModelObj.status = this.isSliderChecked ? 'ON' : 'OFF';
       this.campaignModelObj.town = this.formValues.value.town;
       this.campaignModelObj.radius = this.sliderValue;
     }
-    this.apiService.postCampaign(this.campaignModelObj).subscribe((res) => {
-      console.log(res);
+    this.apiService.postCampaign(this.campaignModelObj).subscribe(() => {
       this.formValues.reset();
     });
   }
 
+  getCampaignData(): void {
+    this.apiService.getCampaignById(this.campaignModelObj.id).subscribe({
+      next: (campaign) => {
+        console.log(campaign);
+
+        this.campaigns = campaign;
+      },
+    });
+  }
   editCampaign(campaignData: any) {
     this.campaignModelObj.id = campaignData.id;
     this.formValues.controls['campaignName'].setValue(
@@ -135,42 +136,42 @@ export class ModalCampaignComponent implements OnInit {
     this.formValues.controls['campaignFund'].setValue(
       campaignData.campaignFund
     );
-    this.formValues.controls['productName'].setValue(campaignData.productName);
     this.formValues.controls['status'].setValue(campaignData.status);
     this.formValues.controls['radius'].setValue(campaignData.radius);
+    this.formValues.controls['productName'].setValue(campaignData.productName);
   }
 
-  updateCampaign() {
-    this.campaignModelObj.campaignName = this.formValues.value.campaignName;
-    this.campaignModelObj.keyword = this.formValues.value.keyword;
-    this.campaignModelObj.bidAmount = this.formValues.value.bidAmount;
-    this.campaignModelObj.campaignFund = this.formValues.value.campaignFund;
-    this.campaignModelObj.town = this.formValues.value.town;
-    this.campaignModelObj.productName = this.formValues.value.productName;
-
-    this.apiService
-      .updateCampaign(this.campaignModelObj, this.campaignModelObj.id)
-      .subscribe(() => {
-        // this.formValues.reset();
-        this.closeModal();
-        this.getAllCampaignData();
-      });
-  }
-
-  deleteCampaign(campaignData: any) {
-    this.apiService.deleteCampaign(campaignData.id).subscribe((res) => {
-      this.getAllCampaignData();
-    });
-  }
-
-  onSubmit() {
+  onSubmit(): void {
     validateAllFormFields(this.formValues);
 
     if (this.formValues.invalid) return;
 
-    this.postCampaign();
+    this.createCampaign();
     this.getAllCampaignData();
     this.closeModal();
     this.formValues.reset();
+  }
+
+  openEditModal(projectId: number): void {
+    this.initForm();
+    this.getCampaignData();
+    this.campaignModelObj.id = projectId;
+
+    this.modalTitle = 'Edit Campaign';
+    this.modalService.open(this.content, {
+      centered: true,
+    });
+  }
+
+  openModal(): void {
+    this.modalTitle = 'Add Campaign';
+    this.modalService.open(this.content, {
+      centered: true,
+    });
+    this.formValues.reset();
+  }
+
+  closeModal(): void {
+    this.modalService.dismissAll();
   }
 }

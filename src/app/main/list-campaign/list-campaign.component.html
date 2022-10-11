@@ -1,6 +1,8 @@
+<app-modal-campaign #modal> </app-modal-campaign>
+
 <main class="main">
   <div class="main_buttons">
-    <button class="main_buttons_addCampaign" (click)="openModalCampaign()">
+    <button class="main_buttons_addCampaign" (click)="openAddModalCampaign()">
       Add Campaign
     </button>
     <button class="main_buttons_deleteAll">Delete All</button>
@@ -34,10 +36,15 @@
           <td>{{ campaignProperty.town }}</td>
           <td>{{ campaignProperty.radius }}</td>
           <td>
-            <button class="table_td_editBtn">Edit</button>
+            <button
+              class="table_td_editBtn"
+              (click)="openEditModalCampaignData(campaignProperty.id)"
+            >
+              Edit
+            </button>
             <button
               class="table_td_deleteBtn"
-              (click)="deleteCampaign(campaignProperty)"
+              (click)="deleteCampaign(campaignProperty.id)"
             >
               Delete
             </button>
