@@ -32,24 +32,11 @@
 
   .main_wrapper_table {
     width: 60%;
-    background-color: rgb(60, 60, 60);
+    background-color: rgb(50, 50, 50);
     border-collapse: collapse;
     text-align: center;
     box-shadow: 0 0 15px $black;
     border-radius: 20px;
-
-    th {
-      font-size: 15px;
-      text-transform: uppercase;
-      padding: 20px;
-      color: $orange;
-      border-bottom: 2px solid $black;
-    }
-
-    td {
-      padding: 10px 20px;
-      color: $white;
-    }
 
     .table_td_editBtn {
       border: 1px solid $blue;

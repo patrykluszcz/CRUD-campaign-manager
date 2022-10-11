@@ -11,6 +11,7 @@ import { MainComponent } from './main/main.component';
 import { FooterComponent } from './footer/footer.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ModalCampaignComponent } from './main/modal-campaign/modal-campaign.component';
+import { ListCampaignComponent } from './main/list-campaign/list-campaign.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
@@ -19,6 +20,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     HeaderComponent,
     MainComponent,
     ModalCampaignComponent,
+    ListCampaignComponent,
     FooterComponent,
   ],
   imports: [
